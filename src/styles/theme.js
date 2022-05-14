@@ -7,7 +7,7 @@ const theme = {
     },
     focus: {
       border: {
-        color: '#2100EC',
+        color: '#ffffff',
       },
     },
   },

@@ -1,0 +1,129 @@
+/* eslint-disable no-alert */
+import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import {  Box, Form,   } from 'grommet'
+import * as S from './style'
+import dmLogo from "../../assets/dm.png"
+
+import { create } from '../../services/users'
+
+export default function SignUp() {
+  const navigate = useNavigate()
+  const [loading, setLoading] = useState(false)
+
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    name: '',
+    image: '',
+  })
+
+  function handleChange({ target }) {
+    setFormData({ ...formData, [target.name]: target.value })
+  }
+
+  async function handleSubmit(e) {
+    e.preventDefault()
+    setLoading(true)
+
+    const user = { ...formData }
+
+    if (
+      user.email === '' ||
+      user.password === '' ||
+      user.name === '' ||
+      user.image === ''
+    ) {
+      alert('Missing field')
+      setLoading(false)
+      return
+    }
+
+    try {
+      await create(user)
+
+      navigate('/sign-in')
+    } catch (error) {
+      setLoading(false)
+
+      if (error.response.status === 409) {
+        alert('email must be unique')
+      }
+      alert('Our servers in construction, sorry for the inconvencie')
+      console.log(error.status)
+    }
+  }
+
+  return (
+    <S.Container>
+      <Box>
+        <img src={dmLogo} alt='Duel Master E-sports!'/>
+      </Box>
+      <S.Content>
+        <Form
+          style={{}}
+          onSubmit={(e) => {
+            handleSubmit(e)
+          }}
+        >
+          <S.formField
+            onChange={(e) => {
+              handleChange(e)
+            }}
+            name='name'
+            label='Nome'
+          >
+            <S.textInput
+              name='name'
+              value={formData.name}
+              placeholder='Seu nome grande apostador!'
+            />
+          </S.formField>
+          <S.formField
+            name='email'
+            label='Email'
+            onChange={(e) => {
+              handleChange(e)
+            }}
+          >
+            <S.textInput
+              name='email'
+              value={formData.email}
+              placeholder='lostmoney@bet.com'
+            />
+          </S.formField>
+          <S.formField
+            name='password'
+            label='Senha'
+            onChange={(e) => {
+              handleChange(e)
+            }}
+          >
+            <S.textInput
+              name='password'
+              value={formData.password}
+              placeholder='123456'
+            />
+          </S.formField>
+          <S.formField
+            name='image'
+            label='Imagem'
+            onChange={(e) => {
+              handleChange(e)
+            }}
+          >
+            <S.textInput
+              name='image'
+              value={formData.image}
+              placeholder='Sua linda imagem'
+            />
+          </S.formField>
+
+          <S.Buttons type='submit' primary label='Submit' disabled={loading}>
+            Sign Up
+          </S.Buttons>
+        </Form>
+      </S.Content>
+    </S.Container>
+  )
+}
