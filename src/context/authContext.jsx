@@ -1,10 +1,13 @@
-import { createContext, useState } from "react";
+/* eslint-disable react/jsx-no-constructed-context-values */
+import react from "react";
 
-const AuthContext = createContext();
 
+const AuthContext = react.createContext();
+
+// eslint-disable-next-line react/prop-types
 export function AuthProvider({ children }) {
   const persistedAuth = JSON.parse(localStorage.getItem("auth"));
-  const [auth, setAuth] = useState(persistedAuth);
+  const [auth, setAuth] = react.useState(persistedAuth);
 
   function signin(authData) {
     setAuth(authData);
@@ -12,6 +15,7 @@ export function AuthProvider({ children }) {
   }
 
   return (
+    // eslint-disable-next-line react/react-in-jsx-scope
     <AuthContext.Provider value={{ auth, signin }}>
       {children}
     </AuthContext.Provider>
