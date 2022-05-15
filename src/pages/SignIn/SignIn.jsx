@@ -1,21 +1,25 @@
 /* eslint-disable no-alert */
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import {  Box, Form,   } from 'grommet'
+import { Box, Form } from 'grommet'
 import * as S from './style'
-import dmLogo from "../../assets/dm.png"
+import dmLogo from '../../assets/dm.png'
+import { signIn } from '../../services/users'
+import useAuth from '../../hooks/useAuth'
+import useUser from '../../hooks/useUser'
 
-import { create } from '../../services/users'
 
-export default function SignUp() {
+
+export default function SignIn() {
   const navigate = useNavigate()
+  const { auth, signin } = useAuth()
+  const { setUser } = useUser()
   const [loading, setLoading] = useState(false)
 
   const [formData, setFormData] = useState({
     email: '',
     password: '',
-    name: '',
-    image: '',
+    
   })
 
   function handleChange({ target }) {
@@ -30,9 +34,7 @@ export default function SignUp() {
 
     if (
       user.email === '' ||
-      user.password === '' ||
-      user.name === '' ||
-      user.image === ''
+      user.password === ''
     ) {
       alert('Missing field')
       setLoading(false)
@@ -40,19 +42,26 @@ export default function SignUp() {
     }
 
     try {
-      await create(user)
-
-      navigate('/sign-in')
+      const response = await signIn(user)
+      signin(response.token)
+      setUser(response.user)
+      navigate('/')
     } catch (error) {
       setLoading(false)
 
-      if (error.response.status === 409) {
-        alert('email must be unique')
+      if (error.response.status === 401) {
+        console.error(error.status)
+        alert("Unauthorized")
       }
-      alert('Our servers in construction, sorry for the inconvencie')
+      alert('Our servers in construction, sorry for the inconvenient')
       console.log(error.status)
     }
   }
+  useEffect(() => {
+    if (auth) {
+      navigate('/')
+    } // eslint-disable-next-line
+  }, [auth])
 
   return (
     <S.Container>
@@ -67,19 +76,6 @@ export default function SignUp() {
           }}
         >
           <S.formField
-            onChange={(e) => {
-              handleChange(e)
-            }}
-            name='name'
-            label='Nome'
-          >
-            <S.textInput
-              name='name'
-              value={formData.name}
-              placeholder='Seu nome grande apostador!'
-            />
-          </S.formField>
-          <S.formField
             name='email'
             label='Email'
             onChange={(e) => {
@@ -89,7 +85,7 @@ export default function SignUp() {
             <S.textInput
               name='email'
               value={formData.email}
-              placeholder='bet@bet.com'
+              placeholder='email@bet.com'
             />
           </S.formField>
           <S.formField
@@ -105,26 +101,13 @@ export default function SignUp() {
               placeholder='123456'
             />
           </S.formField>
-          <S.formField
-            name='image'
-            label='Imagem'
-            onChange={(e) => {
-              handleChange(e)
-            }}
-          >
-            <S.textInput
-              name='image'
-              value={formData.image}
-              placeholder='Sua linda imagem'
-            />
-          </S.formField>
 
           <S.Buttons type='submit' primary label='Submit' disabled={loading}>
             Sign Up
           </S.Buttons>
         </Form>
         <S.StyledLink to='/'>Voltar para a página principal?</S.StyledLink>
-        <S.StyledLink to='/sign-in'>Clique aqui para fazer login!</S.StyledLink>
+        <S.StyledLink to='/sign-up'>Gostaria de se cadastrar?</S.StyledLink>
       </S.Content>
     </S.Container>
   )
