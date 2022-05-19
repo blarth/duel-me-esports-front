@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import { Box, Button, FormField, TextInput } from 'grommet'
+import { Link } from 'react-router-dom'
 
 export const Container = styled(Box)`
   width: 100vw;
@@ -44,4 +45,22 @@ export const formField = styled(FormField)`
 
 export const textInput = styled(TextInput)`
   background: #303236;
+`
+
+export const StyledLink = styled(Link)`
+  all: unset;
+  color: #fff;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 15px;
+  line-height: 18px;
+
+  margin-top: 25px;
+
+  font-weight: 400;
+  font-size: 20px;
+
+  font-family: 'Ubuntu', sans-serif;
+
+  text-decoration: underline;
 `
