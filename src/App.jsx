@@ -15,7 +15,7 @@ import SignIn from './pages/SignIn/SignIn'
 export default function App() {
   return (
     <AuthProvider>
-      <UserProvider /* user={user} setUser={setUser} persistedUser={persistedUser} */
+      <UserProvider
       >
         <Grommet theme={theme}>
           <Router>
