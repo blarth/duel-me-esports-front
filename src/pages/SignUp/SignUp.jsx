@@ -1,7 +1,8 @@
 /* eslint-disable no-alert */
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import {  Box, Form,   } from 'grommet'
+import {  Box, Button, Form,   } from 'grommet'
+import { Hide, View } from 'grommet-icons'
 import * as S from './style'
 import dmLogo from "../../assets/dm.png"
 
@@ -10,6 +11,7 @@ import { create } from '../../services/users'
 export default function SignUp() {
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
+  const [reveal, setReveal] = useState(false)
 
   const [formData, setFormData] = useState({
     email: '',
@@ -103,6 +105,12 @@ export default function SignUp() {
               name='password'
               value={formData.password}
               placeholder='123456'
+              type={reveal ? 'text' : 'password'}
+              plain
+            />
+            <Button
+              icon={reveal ? <View size='medium' /> : <Hide size='medium' />}
+              onClick={() => setReveal(!reveal)}
             />
           </S.formField>
           <S.formField

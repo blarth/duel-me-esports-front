@@ -3,9 +3,11 @@ import { useNavigate } from 'react-router-dom'
 
 import * as S from './style'
 import useAuth from '../../hooks/useAuth'
-import Header from '../../components/Header/Header'
 import Tournament from './Components/Tournament/Tournament'
 import { getData } from '../../services/homepage'
+import Header from '../../components/Header/Header'
+import Footer from '../../components/Footer/Footer'
+
 
 export default function Timeline() {
   const navigate = useNavigate()
@@ -24,6 +26,7 @@ export default function Timeline() {
   }, [])
 
   if(data === null) return <h1>Loading...</h1>
+  
 
   return (
     <S.Container>
@@ -32,6 +35,7 @@ export default function Timeline() {
       <S.AccordionTournaments>
         {data.map((tournament) => <Tournament {...tournament} />)}
       </S.AccordionTournaments>
+      <Footer />
     </S.Container>
   )
 }
