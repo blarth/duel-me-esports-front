@@ -10,17 +10,20 @@ import { UserProvider } from './context/userContext'
 import SignUp from './pages/SignUp/SignUp'
 import Timeline from './pages/Timeline/Timeline'
 import SignIn from './pages/SignIn/SignIn'
+import CreateDuel from './pages/createDuel'
+import Duel from './pages/Duel'
 
 
 export default function App() {
   return (
     <AuthProvider>
-      <UserProvider
-      >
+      <UserProvider>
         <Grommet theme={theme}>
           <Router>
             <Routes>
               <Route path='/' element={<Timeline />} />
+              <Route path='/createDuel/:id' element={<CreateDuel />} />
+              <Route path='/duel/:id' element={<Duel />} />
               <Route path='/sign-up' element={<SignUp />} />
               <Route path='/sign-in' element={<SignIn />} />
               <Route path='*' element={<div>Not found!</div>} />

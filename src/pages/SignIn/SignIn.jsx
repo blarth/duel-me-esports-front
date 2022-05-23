@@ -1,7 +1,8 @@
 /* eslint-disable no-alert */
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Box, Form } from 'grommet'
+import { Box, Button, Form } from 'grommet'
+import { Hide, View } from 'grommet-icons'
 import * as S from './style'
 import dmLogo from '../../assets/dm.png'
 import { signIn } from '../../services/users'
@@ -13,8 +14,9 @@ import useUser from '../../hooks/useUser'
 export default function SignIn() {
   const navigate = useNavigate()
   const { auth, signin } = useAuth()
-  const { setUser } = useUser()
+  const { signUser } = useUser()
   const [loading, setLoading] = useState(false)
+  const [reveal, setReveal] = useState(false)
 
   const [formData, setFormData] = useState({
     email: '',
@@ -44,7 +46,7 @@ export default function SignIn() {
     try {
       const response = await signIn(user)
       signin(response.token)
-      setUser(response.user)
+      signUser(response.user)
       navigate('/')
     } catch (error) {
       setLoading(false)
@@ -97,8 +99,14 @@ export default function SignIn() {
           >
             <S.textInput
               name='password'
+              plain
               value={formData.password}
               placeholder='123456'
+              type={reveal ? 'text' : 'password'}
+            />
+            <Button
+              icon={reveal ? <View size='medium' /> : <Hide size='medium' />}
+              onClick={() => setReveal(!reveal)}
             />
           </S.formField>
 

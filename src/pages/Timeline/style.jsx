@@ -21,5 +21,6 @@ export const Text = styled(Heading)`
 
 export const AccordionTournaments = styled(Accordion)`
   background-color: #303236;
+  overflow-y: scroll;
   color: #feb800;
 `

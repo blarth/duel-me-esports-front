@@ -16,4 +16,5 @@ export const IconWrapper = styled(Box)`
 export const Buttons = styled(Button)`
   border-color: #feb800;
   color: #ffffff;
+  margin-bottom: 20px ;
 `
