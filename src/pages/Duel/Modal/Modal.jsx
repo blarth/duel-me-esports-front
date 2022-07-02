@@ -10,6 +10,7 @@ export default function PlaceBetModal({
   setBet,
   teamName,
   odd,
+  valueAccepted,
   handleDuel
 }) {
   function closeModal() {
@@ -28,21 +29,19 @@ export default function PlaceBetModal({
         <p className='modal-title'>
           {teamName} - {odd}
         </p>
+        <p className='modal-title'>
+          Valor aceito para essa aposta : <span>{valueAccepted}</span> Blerths
+        </p>
         <IoClose className='close-icon' onClick={() => closeModal()} />
       </S.ModalHeader>
       <S.ButtonContainer>
         <S.formField
           onChange={(e) => {
             setBet(e.target.value)
-            
           }}
           name='bet'
         >
-          <S.textInput
-            name='bet'
-            value={bet}
-            placeholder='Valor'
-          />
+          <S.textInput name='bet' value={bet} placeholder='Valor' />
         </S.formField>
         <button
           onClick={(e) => {

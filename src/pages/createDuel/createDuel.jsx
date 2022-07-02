@@ -1,9 +1,9 @@
 /* eslint-disable react/jsx-no-bind */
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
 
-import { Avatar, Box } from 'grommet'
+import {  Box } from 'grommet'
 import dayjs from 'dayjs'
 import * as S from './style'
 import useAuth from '../../hooks/useAuth'
@@ -11,6 +11,8 @@ import Header from '../../components/Header/Header'
 import Footer from '../../components/Footer/Footer'
 import { getDuelMatch, postDuelMatch } from '../../services/duels'
 import PlaceBetModal from './Modal/Modal'
+import Team from '../../components/Team'
+import UserContext from '../../context/userContext'
 
 export default function Duel() {
   const navigate = useNavigate()
@@ -22,6 +24,7 @@ export default function Duel() {
   const [odd, setOdd] = useState()
   const {id} = useParams()
   const [placeBetModal, setPlaceBetModal] = useState(false)
+  const { user, signUser } = useContext(UserContext)
 
  async function handleDuel(e){
     e.preventDefault()
@@ -34,18 +37,21 @@ export default function Duel() {
     
     try {
       const duelId = await postDuelMatch(auth, id, createDuelData)
+      const userNewData = { ...user, blerth: user.blerth - bet }
+      signUser(userNewData)
       setPlaceBetModal(false)
       alert('Duelo criado!')
       navigate(`/duel/${duelId}`)
 
     } catch (error) {
-      console.log(error.status)
+      console.log(error.message)
     }
 
 
   }
 
   function openBetModal() {
+    
     setPlaceBetModal(true)
     document.body.style.overflow = 'hidden'
   }
@@ -76,56 +82,16 @@ export default function Duel() {
           width='100vh'
         >
           <S.Text>{dayjs(data.startedAt).format('DD/MM/YYYY - HH:mm')}</S.Text>
-          <S.box>
-            <Box
-              direction='row'
-              gap='large'
-              justify='flex-start'
-              align='center'
-            >
-              <Avatar size='large' src={data.matchesTeam[0].team.logo} />
-              <S.TextName>{data.matchesTeam[0].team.name}</S.TextName>
-            </Box>
-            <Box direction='row' gap='xlarge'>
-              <S.TextOdd>{data.leftTeamOdd}</S.TextOdd>
-              <S.Buttons
-                onClick={() => {
-                  setTeamId(data.matchesTeam[0].team.id)
-                  setTeamName(data.matchesTeam[0].team.name)
-                  setOdd(data.leftTeamOdd)
-                  openBetModal()
-                }}
-                size='small'
-                type='primary'
-                label='Aposte nesse time!'
-              />
-            </Box>
-          </S.box>
-          <S.box>
-            <Box
-              direction='row'
-              gap='large'
-              justify='flex-start'
-              align='center'
-            >
-              <Avatar size='large' src={data.matchesTeam[1].team.logo} />
-              <S.TextName>{data.matchesTeam[1].team.name}</S.TextName>
-            </Box>
-            <Box direction='row' gap='xlarge'>
-              <S.TextOdd>{data.rightTeamOdd}</S.TextOdd>
-              <S.Buttons
-                onClick={() => {
-                  setTeamId(data.matchesTeam[1].team.id)
-                  setTeamName(data.matchesTeam[1].team.name)
-                  setOdd(data.rightTeamOdd)
-                  openBetModal()
-                }}
-                size='small'
-                type='primary'
-                label='Aposte nesse time!'
-              />
-            </Box>
-          </S.box>
+
+          {data.matchesTeam.map((team) => (
+            <Team
+              team={team}
+              setTeamId={setTeamId}
+              setTeamName={setTeamName}
+              setOdd={setOdd}
+              openBetModal={openBetModal}
+            />
+          ))}
         </Box>
         <Footer />
       </S.Container>
