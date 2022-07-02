@@ -1,10 +1,11 @@
 /* eslint-disable no-alert */
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import {  Box, Button, Form,   } from 'grommet'
+import {   Button, Form,   } from 'grommet'
 import { Hide, View } from 'grommet-icons'
+import {GiBolas} from 'react-icons/gi'
 import * as S from './style'
-import dmLogo from "../../assets/dm.png"
+
 
 import { create } from '../../services/users'
 
@@ -58,10 +59,14 @@ export default function SignUp() {
 
   return (
     <S.Container>
-      <Box>
-        <img src={dmLogo} alt='Duel Master E-sports!' />
-      </Box>
       <S.Content>
+        <S.IconWrapper>
+          <GiBolas />
+        </S.IconWrapper>
+        <S.textLogo>
+          Duel-me <br />
+          E-sports
+        </S.textLogo>
         <Form
           style={{}}
           onSubmit={(e) => {
@@ -79,6 +84,19 @@ export default function SignUp() {
               name='name'
               value={formData.name}
               placeholder='Seu nome grande apostador!'
+            />
+          </S.formField>
+          <S.formField
+            name='image'
+            label='Imagem'
+            onChange={(e) => {
+              handleChange(e)
+            }}
+          >
+            <S.textInput
+              name='image'
+              value={formData.image}
+              placeholder='Sua linda imagem'
             />
           </S.formField>
           <S.formField
@@ -113,21 +131,8 @@ export default function SignUp() {
               onClick={() => setReveal(!reveal)}
             />
           </S.formField>
-          <S.formField
-            name='image'
-            label='Imagem'
-            onChange={(e) => {
-              handleChange(e)
-            }}
-          >
-            <S.textInput
-              name='image'
-              value={formData.image}
-              placeholder='Sua linda imagem'
-            />
-          </S.formField>
 
-          <S.Buttons type='submit' primary label='Submit' disabled={loading}>
+          <S.Buttons type='submit' label='Submit' disabled={loading}>
             Sign Up
           </S.Buttons>
         </Form>

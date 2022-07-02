@@ -1,10 +1,10 @@
 /* eslint-disable no-alert */
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Box, Button, Form } from 'grommet'
+import {  Button, Form } from 'grommet'
 import { Hide, View } from 'grommet-icons'
+import { GiBolas } from 'react-icons/gi'
 import * as S from './style'
-import dmLogo from '../../assets/dm.png'
 import { signIn } from '../../services/users'
 import useAuth from '../../hooks/useAuth'
 import useUser from '../../hooks/useUser'
@@ -67,10 +67,14 @@ export default function SignIn() {
 
   return (
     <S.Container>
-      <Box>
-        <img src={dmLogo} alt='Duel Master E-sports!' />
-      </Box>
       <S.Content>
+        <S.IconWrapper>
+          <GiBolas />
+        </S.IconWrapper>
+        <S.textLogo>
+          Duel-me <br />
+          E-sports
+        </S.textLogo>
         <Form
           style={{}}
           onSubmit={(e) => {
@@ -110,7 +114,7 @@ export default function SignIn() {
             />
           </S.formField>
 
-          <S.Buttons type='submit' primary label='Submit' disabled={loading}>
+          <S.Buttons type='submit' label='Submit' disabled={loading}>
             Sign Up
           </S.Buttons>
         </Form>

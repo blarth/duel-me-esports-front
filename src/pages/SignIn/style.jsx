@@ -1,17 +1,18 @@
 import styled from 'styled-components'
-import { Box, Button, FormField, TextInput } from 'grommet'
+import { Box, Button, FormField, Text, TextInput } from 'grommet'
 import { Link } from 'react-router-dom'
 
 export const Container = styled(Box)`
   width: 100vw;
   height: 100vh;
-  background: rgb(16, 6, 0);
+  background: #1a1c20;
   justify-content: center;
   align-items: space-between;
   gap: 40px;
   margin: 0;
 `
 export const Buttons = styled(Button)`
+  color: #ffffff;
   width: 100%;
   height: 3rem;
   display: flex;
@@ -20,8 +21,8 @@ export const Buttons = styled(Button)`
   font-size: x-large;
   font-weight: 700;
   margin-bottom: 30px;
-  background-color: #feb800;
-  color: rgb(31, 18, 11);
+  border-radius: 15px;
+  border: 2px solid #feb800;
 `
 
 export const Content = styled(Box)`
@@ -62,4 +63,18 @@ export const StyledLink = styled(Link)`
   text-decoration: underline;
 
   
+`
+
+export const textLogo = styled(Text)`
+  width: max-content;
+  font-size: 4rem;
+  line-height: 3rem;
+  text-align: center;
+  font-family: 'Faster One', sans-serif;
+  color: #f8f7f2;
+`
+
+export const IconWrapper = styled(Box)`
+  font-size: 3em;
+  color: #f8f7f2;
 `
