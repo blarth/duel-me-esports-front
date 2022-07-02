@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-
+import dayjs from "dayjs"
 import * as S from './style'
 import useAuth from '../../hooks/useAuth'
 import Tournament from './Components/Tournament/Tournament'
@@ -16,7 +16,8 @@ export default function Timeline() {
   
   async function get() {
     const response = await getData()
-    setData(response)
+    const filtredTournaments = response.filter(tournament => dayjs().isBefore(tournament.finishedAt) )
+    setData(filtredTournaments)
   }
   useEffect(() => {
     if (!auth) {
@@ -27,7 +28,7 @@ export default function Timeline() {
 
   if(data === null) return <h1>Loading...</h1>
   
-
+  
   return (
     <S.Container>
       <Header />

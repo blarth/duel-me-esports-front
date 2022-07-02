@@ -1,8 +1,8 @@
 /* eslint-disable react/jsx-no-bind */
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
-import { Avatar, Box } from 'grommet'
+import {  Box } from 'grommet'
 import dayjs from 'dayjs'
 import * as S from './style'
 import useAuth from '../../hooks/useAuth'
@@ -10,20 +10,21 @@ import Header from '../../components/Header/Header'
 import Footer from '../../components/Footer/Footer'
 import { getDuel, postDuel } from '../../services/duels'
 import PlaceBetModal from './Modal/Modal'
+import UserContext from '../../context/userContext'
+import DuelTeam from './DuelTeam'
 
 export default function Duel() {
   const navigate = useNavigate()
   const { auth } = useAuth()
   const [data, setData] = useState(null)
-  const [duelist, setDuelist] = useState(null)
   const [teamId, setTeamId] = useState()
   const [teamName, setTeamName] = useState()
-  const [firstInfoPlayer, setFirstInfoPlayer] = useState(null)
-  const [secondInfoPlayer, setSecondInfoPlayer] = useState(null)
   const [bet, setBet] = useState()
   const [odd, setOdd] = useState()
+  const [valueAccepted, setValueAccepted] = useState(0)
   const { id } = useParams()
   const [placeBetModal, setPlaceBetModal] = useState(false)
+  const { user, signUser } = useContext(UserContext)
 
   async function handleDuel(e) {
     e.preventDefault()
@@ -32,14 +33,20 @@ export default function Duel() {
       teamId,
       bet: Number(bet),
     }
-
+    if(bet !== valueAccepted){
+      alert('O valor da aposta deve que ser igual ao aceito')
+      return
+    }
     try {
       await postDuel(auth, id, createDuelData)
+      const userNewData = { ...user, blerth: user.blerth - bet }
+      signUser(userNewData)
       setPlaceBetModal(false)
-      alert('Duelo criado!')
+      alert('Duelo Aceito!')
       navigate(`/duel/${id}`)
     } catch (error) {
-      console.log(error.status)
+      setPlaceBetModal(false)
+      alert(error.response.data)
     }
   }
 
@@ -51,9 +58,12 @@ export default function Duel() {
   async function get() {
     const response = await getDuel(id, auth)
     setData(response)
-    const filtredDuelist = response.duelUser.filter((person) => person.teamId)
-    setDuelist(filtredDuelist)
-
+    if (response.duelUser.length < 2) {
+      const match = response.match.matchesTeam.find(
+        (el) => el.team.duelUser.length === 1
+      )
+      setValueAccepted(((response.duelUser[0].bet)*(match.odd - 1)).toFixed(0))
+    }
   }
   useEffect(() => {
     if (!auth) {
@@ -62,22 +72,9 @@ export default function Duel() {
     get()
   }, [])
 
-  useEffect(() => {
-    if (duelist !== null) {
-      const infos = duelist.filter(
-        (info) => info.teamId === data.match.matchesTeam[0].team.id
-      )
-      setFirstInfoPlayer(infos[0])
-      const infosNext = duelist.filter(
-        (info) => info.teamId === data.match.matchesTeam[1].team.id
-      )
-      setSecondInfoPlayer(infosNext[0])
-    }
-
-  }, [duelist])
 
   if (data === null) return <h1>Loading...</h1>
-
+  console.log(valueAccepted)
   return (
     <>
       <S.Container>
@@ -93,104 +90,17 @@ export default function Duel() {
           <S.Text>
             {dayjs(data.match.startedAt).format('DD/MM/YYYY - HH:mm')}
           </S.Text>
-          <S.box>
-            <Box
-              direction='row'
-              gap='large'
-              justify='flex-start'
-              align='center'
-            >
-              <Avatar size='large' src={data.match.matchesTeam[0].team.logo} />
-              <S.TextName>{data.match.matchesTeam[0].team.name}</S.TextName>
-              {firstInfoPlayer === null ||
-                (firstInfoPlayer === undefined && (
-                  <S.TextOdd>
-                    Valor aceito :{' '}
-                    {(
-                      secondInfoPlayer.bet *
-                      (data.match.rightTeamOdd - 1)
-                    ).toFixed(0)}
-                     
-                  </S.TextOdd>
-                ))}
-            </Box>
-            <Box direction='row' gap='xlarge'>
-              <S.TextOdd>{data.match.leftTeamOdd}</S.TextOdd>
-              {firstInfoPlayer === null || firstInfoPlayer === undefined ? (
-                <S.Buttons
-                  onClick={() => {
-                    setTeamId(data.match.matchesTeam[0].team.id)
-                    setTeamName(data.match.matchesTeam[0].team.name)
-                    setOdd(data.leftTeamOdd)
-                    openBetModal()
-                  }}
-                  size='small'
-                  type='primary'
-                  label='Aposte nesse time!'
-                />
-              ) : (
-                <>
-                  <Avatar size='large' src={firstInfoPlayer.user.image} />
-                  <S.BoxUser direction='column' gap='small'>
-                    <S.TextName>{firstInfoPlayer.user.name}</S.TextName>
-                    <S.TextName>Blerths : {firstInfoPlayer.bet}</S.TextName>
-                  </S.BoxUser>
-                </>
-              )}
-            </Box>
-          </S.box>
-          <S.box>
-            <Box
-              direction='row'
-              gap='large'
-              justify='flex-start'
-              align='center'
-            >
-              <Avatar size='large' src={data.match.matchesTeam[1].team.logo} />
-              <S.TextName>{data.match.matchesTeam[1].team.name}</S.TextName>
-              {secondInfoPlayer === null ||
-                (secondInfoPlayer === undefined && (
-                
-                  <S.TextOdd>
-                    Valor aceito : {' '}
-                    {(
-                      firstInfoPlayer.bet *
-                      (data.match.leftTeamOdd - 1)
-                    ).toFixed(0)} 
-                  </S.TextOdd>
-                
-                ))}
-            </Box>
-            <Box
-              direction='row'
-              gap='xlarge'
-              align='center'
-              justify='space-between'
-            >
-              <S.TextOdd>{data.match.rightTeamOdd}</S.TextOdd>
-              {secondInfoPlayer === null || secondInfoPlayer === undefined ? (
-                <S.Buttons
-                  onClick={() => {
-                    setTeamId(data.match.matchesTeam[1].team.id)
-                    setTeamName(data.match.matchesTeam[1].team.name)
-                    setOdd(data.leftTeamOdd)
-                    openBetModal()
-                  }}
-                  size='small'
-                  type='primary'
-                  label='Aposte nesse time!'
-                />
-              ) : (
-                <>
-                  <Avatar size='large' src={secondInfoPlayer.user.image} />
-                  <S.BoxUser direction='column' gap='small'>
-                    <S.TextName>{secondInfoPlayer.user.name}</S.TextName>
-                    <S.TextName>Blerths : {secondInfoPlayer.bet}</S.TextName>
-                  </S.BoxUser>
-                </>
-              )}
-            </Box>
-          </S.box>
+
+          {data.match.matchesTeam.map((team) => (
+            <DuelTeam
+              team={team}
+              duelUser={data.duelUser}
+              setTeamId={setTeamId}
+              setTeamName={setTeamName}
+              setOdd={setOdd}
+              openBetModal={openBetModal}
+            />
+          ))}
         </Box>
         <Footer />
       </S.Container>
@@ -202,6 +112,7 @@ export default function Duel() {
         bet={bet}
         teamName={teamName}
         odd={odd}
+        valueAccepted={valueAccepted}
         handleDuel={handleDuel}
       />
     </>

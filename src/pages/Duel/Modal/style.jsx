@@ -10,11 +10,12 @@ export const StyledModal = styled(Modal)`
 export const ModalHeader = styled.div`
   width: 100%;
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
   .modal-title {
-    width: 75%;
+    width: 80%;
     font-family: 'Ubuntu';
-    font-size: 1.888rem;
+    font-size: 1.6rem;
     font-weight: 500;
     line-height: 1em;
     letter-spacing: 1px;
@@ -27,7 +28,11 @@ export const ModalHeader = styled.div`
     margin-top: -5px;
     margin-right: -14px;
   }
-  
+
+  span {
+    text-decoration: underline;
+    color: #feb800;
+  }
 `
 
 

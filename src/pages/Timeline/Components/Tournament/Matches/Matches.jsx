@@ -7,14 +7,15 @@ import dayjs from 'dayjs'
 import * as S from './style'
 
 
-export default function Match({ id ,name, startedAt , leftTeamOdd, rightTeamOdd, matchesTeam  }) {
+
+export default function Match({ id ,name, startedAt ,matchesTeam  }) {
   const navigate = useNavigate()
    
   return (
     <Accordion>
       <AccordionPanel label={name.toUpperCase()}>
-        <Box  justify='center' align='center'>
-          <S.Text>{dayjs(startedAt).format("DD/MM/YYYY - HH:mm")}</S.Text>
+        <Box justify='center' align='center'>
+          <S.Text>{dayjs(startedAt).format('DD/MM/YYYY - HH:mm')}</S.Text>
           <Box direction='row' gap='medium' align='center' justify='center'>
             <Box direction='column' gap='small' align='center'>
               <S.Text>{matchesTeam[0].team.name.toUpperCase()}</S.Text>
@@ -25,11 +26,11 @@ export default function Match({ id ,name, startedAt , leftTeamOdd, rightTeamOdd,
               />
             </Box>
             <Box direction='row' gap='medium' align='center'>
-              <S.Text>{leftTeamOdd}</S.Text>
+              <S.Text>{matchesTeam[0].odd}</S.Text>
               <S.IconWrapper>
                 <GiCrossMark />
               </S.IconWrapper>
-              <S.Text>{rightTeamOdd}</S.Text>
+              <S.Text>{matchesTeam[1].odd}</S.Text>
             </Box>
             <Box direction='column' gap='small' justify='center' align='center'>
               <S.Text>{matchesTeam[1].team.name.toUpperCase()}</S.Text>
@@ -40,9 +41,14 @@ export default function Match({ id ,name, startedAt , leftTeamOdd, rightTeamOdd,
               />
             </Box>
           </Box>
-          <S.Buttons onClick={() => {
-            navigate(`/createDuel/${id}`)
-          }} size='small' type='primary' label='Crie um duelo!' />
+          <S.Buttons
+            onClick={() => {
+              navigate(`/createDuel/${id}`)
+            }}
+            size='small'
+            type='primary'
+            label='Crie um duelo!'
+          />
         </Box>
       </AccordionPanel>
     </Accordion>
