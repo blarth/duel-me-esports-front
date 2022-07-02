@@ -74,7 +74,6 @@ export default function Duel() {
 
 
   if (data === null) return <h1>Loading...</h1>
-  console.log(valueAccepted)
   return (
     <>
       <S.Container>
