@@ -16,8 +16,8 @@ export default function Timeline() {
   
   async function get() {
     const response = await getData()
-    const filtredTournaments = response.filter(tournament => dayjs().isBefore(tournament.finishedAt) )
-    setData(filtredTournaments)
+    const filteredTournaments = response.filter(tournament => dayjs().isBefore(tournament.finishedAt) )
+    setData(filteredTournaments)
   }
   useEffect(() => {
     if (!auth) {
