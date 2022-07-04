@@ -13,6 +13,7 @@ import SignIn from './pages/SignIn/SignIn'
 import CreateDuel from './pages/createDuel'
 import Duel from './pages/Duel'
 import MyDuels from './pages/MyDuels/MyDuels'
+import Duels from './pages/Duels'
 
 
 export default function App() {
@@ -28,6 +29,7 @@ export default function App() {
               <Route path='/sign-up' element={<SignUp />} />
               <Route path='/sign-in' element={<SignIn />} />
               <Route path='/my-duels' element={<MyDuels />} />
+              <Route path='/duels' element={<Duels />} />
               <Route path='*' element={<div>Not found!</div>} />
             </Routes>
           </Router>

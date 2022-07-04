@@ -31,7 +31,7 @@ export default function MyDuels() {
     <>
       <Header />
       <S.Container>
-        <S.Text>Duelos rolando!</S.Text>
+        <S.Text>Duelos para começar ou rolando!</S.Text>
       {upcoming.map((el) => (
         <UserDuels {...el} />
       ))}

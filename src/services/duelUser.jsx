@@ -11,3 +11,7 @@ export async function list(token) {
   const response = await api.get('/my-duels', createConfig(token))
   return response.data
 }
+export async function listAll() {
+  const response = await api.get('/duelUser',)
+  return response.data
+}
