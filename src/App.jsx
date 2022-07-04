@@ -1,5 +1,5 @@
 /* eslint-disable import/no-named-as-default-member */
-/* eslint-disable no-undef */
+
 /* eslint-disable react/display-name */
 import { Grommet } from 'grommet'
 import React from 'react'
