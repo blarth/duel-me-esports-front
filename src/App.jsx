@@ -1,4 +1,3 @@
-/* eslint-disable import/no-named-as-default-member */
 
 /* eslint-disable react/display-name */
 import { Grommet } from 'grommet'
